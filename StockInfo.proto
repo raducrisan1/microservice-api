@@ -14,11 +14,11 @@ message Indicator {
 
 message StockInfoResponse {
     string stockname = 1;
-    repeated Indicator PriceData = 1;
-    repeated Indicator VolumeData = 1;
-    repeated Indicator MacdData = 2;
-    repeated Indicator RsiData = 3;
-    repeated Indicator CciData = 4;
+    repeated Indicator PriceData = 2;
+    repeated Indicator VolumeData = 3;
+    repeated Indicator MacdData = 4;
+    repeated Indicator RsiData = 5;
+    repeated Indicator CciData = 6;
 }
 
 service StockInfoService {
