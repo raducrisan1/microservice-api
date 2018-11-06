@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+message TradeSuggestRequest {
+    int32 resolution = 1;
+}
+
+message Suggestion {
+    string stockname = 1;
+    int32 rating = 2;
+    int32 direction = 3;
+}
+
+message TradeSuggestResponse {
+    repeated Suggestion Suggestions = 1;
+}
+
+service TradeSuggestService {
+    rpc GetSuggestions(TradeSuggestRequest) returns(TradeSuggestResponse) {}
+}
