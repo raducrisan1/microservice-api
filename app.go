@@ -1,9 +1,13 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"log"
 	"net/http"
+	"os"
+	"os/signal"
+	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/raducrisan1/microservice-api/tradesuggest"
@@ -16,8 +20,8 @@ func main() {
 		log.Fatalf("Dial failed: %v", err)
 	}
 	tradeSuggestClient := tradesuggest.NewTradeSuggestServiceClient(conn)
-	apiSrv := gin.Default()
-	apiSrv.GET("/api/:stockname", func(c *gin.Context) {
+	router := gin.Default()
+	router.GET("/api/:stockname", func(c *gin.Context) {
 		stockName := c.Param("stockname")
 		req := &tradesuggest.TradeSuggestRequest{
 			Resolution: 300}
@@ -31,7 +35,25 @@ func main() {
 				"data":   res.Suggestions})
 		}
 	})
-	if err := apiSrv.Run(":3030"); err != nil {
-		log.Fatalf("Could not start the gin server: %v", err)
+	srv := &http.Server{
+		Addr:    ":3030",
+		Handler: router}
+
+	go func() {
+		if err := srv.ListenAndServe(); err != nil && err != http.ErrServerClosed {
+			log.Fatalf("listen: %s\n", err)
+		}
+	}()
+
+	quit := make(chan os.Signal)
+	signal.Notify(quit, os.Interrupt)
+	<-quit
+
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+
+	if err := srv.Shutdown(ctx); err != nil {
+		log.Fatal("Server Shutdown:", err)
 	}
+	fmt.Println("\nmicroservice-api has been stopped")
 }
