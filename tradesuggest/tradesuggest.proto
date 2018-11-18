@@ -6,8 +6,8 @@ message TradeSuggestRequest {
 
 message Suggestion {
     string stockname = 1;
-    int32 rating = 2;
-    int32 direction = 3;
+    int32 rating = 2; 
+    int32 direction = 3; 
 }
 
 message TradeSuggestResponse {

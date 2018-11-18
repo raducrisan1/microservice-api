@@ -11,7 +11,7 @@ import (
 )
 
 func main() {
-	conn, err := grpc.Dial("localhost:3015", grpc.WithInsecure())
+	conn, err := grpc.Dial("localhost:3070", grpc.WithInsecure())
 	if err != nil {
 		log.Fatalf("Dial failed: %v", err)
 	}
@@ -27,8 +27,8 @@ func main() {
 				"result": err})
 		} else {
 			c.JSON(http.StatusOK, gin.H{
-				"result": fmt.Sprintf("Will bring some data for %v", stockName),
-				"data":   res})
+				"result": fmt.Sprintf("Rating data for %v", stockName),
+				"data":   res.Suggestions})
 		}
 	})
 	if err := apiSrv.Run(":3030"); err != nil {

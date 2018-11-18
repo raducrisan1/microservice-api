@@ -64,7 +64,7 @@ func (m *TradeSuggestRequest) GetResolution() int32 {
 type Suggestion struct {
 	Stockname            string   `protobuf:"bytes,1,opt,name=stockname,proto3" json:"stockname,omitempty"`
 	Rating               int32    `protobuf:"varint,2,opt,name=rating,proto3" json:"rating,omitempty"`
-	Direction            int32    `protobuf:"varint,3,opt,name=direction,proto3" json:"direction,omitempty"`
+	Direction            int32    `protobuf:"varint,3,opt,name=direction,proto3" json:"direction"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
 	XXX_unrecognized     []byte   `json:"-"`
 	XXX_sizecache        int32    `json:"-"`
