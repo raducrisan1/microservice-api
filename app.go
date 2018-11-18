@@ -15,7 +15,8 @@ import (
 )
 
 func main() {
-	conn, err := grpc.Dial("localhost:3070", grpc.WithInsecure())
+	addr := os.Getenv("REPORTS_GRPC_ADDR")
+	conn, err := grpc.Dial(addr, grpc.WithInsecure())
 	if err != nil {
 		log.Fatalf("Dial failed: %v", err)
 	}
@@ -26,7 +27,7 @@ func main() {
 		req := &tradesuggest.TradeSuggestRequest{
 			Resolution: 300}
 		if res, err := tradeSuggestClient.GetSuggestions(c, req); err != nil {
-			log.Fatalf("Could not obtain data from the gRPC service TradeSuggest: %v", err)
+			log.Printf("Could not obtain data from the gRPC service TradeSuggest: %v", err)
 			c.JSON(http.StatusInternalServerError, gin.H{
 				"result": err})
 		} else {
@@ -35,6 +36,7 @@ func main() {
 				"data":   res.Suggestions})
 		}
 	})
+
 	srv := &http.Server{
 		Addr:    ":3030",
 		Handler: router}
@@ -48,6 +50,8 @@ func main() {
 	quit := make(chan os.Signal)
 	signal.Notify(quit, os.Interrupt)
 	<-quit
+
+	fmt.Println("\nShutdown microservice-api ...")
 
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
