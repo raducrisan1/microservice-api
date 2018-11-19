@@ -12,4 +12,4 @@ Note: you need to have protoc-gen-go plugin installed together with protoc tool.
 
 ## Creating the Docker container
 
-To create a docker container, simply run 
+To create a docker container, simply run `./build.sh` and afterwards `sudo sh ./create-run-image.sh`
