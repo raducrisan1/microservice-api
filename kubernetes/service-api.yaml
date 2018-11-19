@@ -1,0 +1,22 @@
+apiVersion: v1
+kind: Service
+metadata:  
+  generateName: api-
+  labels:
+    app: api
+  name: api-npservice
+  namespace: itdays  
+spec:
+  clusterIP: 10.51.255.175
+  externalTrafficPolicy: Cluster
+  ports:
+  - nodePort: 32262
+    port: 80
+    protocol: TCP
+    targetPort: 3030
+  selector:
+    app: api
+  sessionAffinity: None
+  type: NodePort
+status:
+  loadBalancer: {}

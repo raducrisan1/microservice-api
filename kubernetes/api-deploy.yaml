@@ -1,0 +1,63 @@
+---
+apiVersion: "v1"
+kind: "ConfigMap"
+metadata:
+  name: "api-config"
+  namespace: "itdays"
+  labels:
+    app: "api"
+data:
+  REPORTS_GRPC_ADDR: "reports.itdays.svc.cluster.local"
+---
+apiVersion: "extensions/v1beta1"
+kind: "Deployment"
+metadata:
+  name: "api"
+  namespace: "itdays"
+  labels:
+    app: "api"
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: "api"
+  template:
+    metadata:
+      labels:
+        app: "api"
+    spec:
+      containers:
+      - name: "microservice-api"
+        image: "gcr.io/itdays-201118/microservice-api:latest"
+        env:
+        - name: "REPORTS_GRPC_ADDR"
+          valueFrom:
+            configMapKeyRef:
+              key: "REPORTS_GRPC_ADDR"
+              name: "api-config"
+---
+apiVersion: "autoscaling/v1"
+kind: "HorizontalPodAutoscaler"
+metadata:
+  name: "api-hpa"
+  namespace: "itdays"
+  labels:
+    app: "api"
+spec:
+  scaleTargetRef:
+    kind: "Deployment"
+    name: "api"
+    apiVersion: "apps/v1beta1"
+  minReplicas: 1
+  maxReplicas: 5
+  targetCPUUtilizationPercentage: 80
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: api-ingress
+  namespace: itdays
+spec:
+  backend:
+    serviceName: api-service
+    servicePort: 80

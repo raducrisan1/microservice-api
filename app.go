@@ -36,6 +36,10 @@ func main() {
 				"data":   res.Suggestions})
 		}
 	})
+	router.GET("/health", func(c *gin.Context) {
+		c.JSON(http.StatusOK, gin.H{
+			"result": "success"})
+	})
 
 	srv := &http.Server{
 		Addr:    ":3030",

@@ -1,0 +1,11 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: api-ingress
+  namespace: itdays
+  labels:
+    app: api
+spec:
+  backend:
+    serviceName: api-npservice
+    servicePort: 8080
